@@ -78,6 +78,8 @@ namespace TasksManager.Controllers
             {
                 return NotFound();
             }
+            ViewData["TaskId"] = new SelectList(await _tasksService.GetAll(), "Task_Id", "Task_Name");
+
             return View(progress);
         }
 
