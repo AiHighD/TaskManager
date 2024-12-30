@@ -1,4 +1,4 @@
-@model IEnumerable<TasksManager.Data.Entities.Progress>
+@model PaginatedList<ProgressViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,19 +9,31 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index">
+    <div class="d-flex">
+        <input class="form-control" placeholder="Search..." value="@ViewData["CurrentFilter"]" type="text"
+            autocomplete="off" name="SearchString" />
+        <select name="taskId" class="form-select" asp-items="ViewBag.TaskId">
+            <option value="">-- Select Task --</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Progress_Percentage)
+                @Html.DisplayNameFor(model => model[0].Progress_Percentage)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Note)
+                @Html.DisplayNameFor(model => model[0].Note)
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.Task)
+                Actions
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -33,9 +45,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Note)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Task.Task_Id)
-            </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Progress_Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Progress_Id">Details</a> |

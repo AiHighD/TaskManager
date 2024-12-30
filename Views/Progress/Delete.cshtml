@@ -1,4 +1,4 @@
-@model TasksManager.Data.Entities.Progress
+@model TasksManager.ViewModels.ProgressViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -27,7 +27,7 @@
             @Html.DisplayNameFor(model => model.Task)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task.Task_Id)
+            @Html.DisplayFor(model => model.Task)
         </dd>
     </dl>
     

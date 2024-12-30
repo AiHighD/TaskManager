@@ -15,10 +15,14 @@ namespace TasksManager.ViewModels.AutoMapper
             CreateMap<TaskRequest, Tasks>();
 
             // Proress
-            CreateMap<Progress, ProgressViewModel>();
-            CreateMap<ProgressViewModel, Progress>();
+            CreateMap<Progress, ProgressViewModel>()
+                .ForMember(dest => dest.Task, opt => opt.MapFrom(src => src.TaskId)); // Task ánh xạ từ TaskId
+                
+            CreateMap<ProgressViewModel, Progress>()
+                .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId)); // TaskId ánh xạ từ Task
+
             CreateMap<ProgressRequest, Progress>()
-            .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
+                .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
 
             // Document
             CreateMap<Documents, DocumentViewModel>()

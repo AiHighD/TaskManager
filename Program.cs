@@ -17,7 +17,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<ITasksService, TasksService>();
 builder.Services.AddTransient<IAttachmentService, AttachmentService>();
 builder.Services.AddTransient<IDocumentService, DocumentService>();
-//builder.Services.AddTransient<ILessonsService, LessonsService>();
+builder.Services.AddTransient<IProgressService, ProgressService>();
 
 //File Storage
 builder.Services.AddTransient<IStorageService, FileStorageService>();

@@ -23,7 +23,6 @@ public class ProgressViewModel
 
     public string? Note { get; set; }
 
-    [Display(Name = "Taski")]
     public int TaskId { get; set; }
 
     [Display(Name = "Task Name")]

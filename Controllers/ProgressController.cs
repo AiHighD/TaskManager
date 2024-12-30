@@ -1,58 +1,57 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using TasksManager.Data;
-using TasksManager.Data.Entities;
+using TasksManager.Services;
+using TasksManager.ViewModels;
 
 namespace TasksManager.Controllers
 {
     public class ProgressController : Controller
     {
-        private readonly TasksDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IProgressService _progressService;
+        private readonly ITasksService _tasksService;
 
-        public ProgressController(TasksDbContext context, IMapper mapper)
+        int PAGESIZE = 3;
+
+        public ProgressController(IProgressService progressService, ITasksService tasksService)
         {
-            _context = context;
-            _mapper = mapper;
+            _progressService = progressService;
+            _tasksService = tasksService;
         }
 
         // GET: Progress
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? taskId, int? pageNumber)
         {
-            
-            var tasksDbContext = _context.Progress.Include(p => p.Task);
-            return View(await tasksDbContext.ToListAsync());
+            ViewData["ProgressSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("progress") ? "progress_desc" : "";
+            ViewData["NoteSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("note") ? "note_desc" : "note";
+
+            var progress = await _tasksService.GetAll();
+            ViewData["TaskId"] = progress.Select(x => new SelectListItem()
+            {
+                Text = x.Task_Name,
+                Value = x.Task_Id.ToString(),
+                Selected = taskId.HasValue && taskId == x.Task_Id
+            });
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            return View(await _progressService.GetAllFilter(sortOrder, currentFilter, searchString, taskId, pageNumber, PAGESIZE));
         }
 
         // GET: Progress/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var progress = await _context.Progress
-                .Include(p => p.Task)
-                .FirstOrDefaultAsync(m => m.Progress_Id == id);
+            var progress = await _progressService.GetById(id);
             if (progress == null)
             {
                 return NotFound();
             }
-
             return View(progress);
         }
 
         // GET: Progress/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Task_Id", "Task_Name");
+            ViewData["TaskId"] = new SelectList(await _tasksService.GetAll(), "Task_Id", "Task_Name");
             return View();
         }
 
@@ -61,32 +60,24 @@ namespace TasksManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Progress_Id,Progress_Percentage,Note,TaskId")] Progress progress)
+        public async Task<IActionResult> Create(ProgressRequest request)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(progress);
-                await _context.SaveChangesAsync();
+                await _progressService.Create(request);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Task_Id", "Task_Name", progress.TaskId);
-            return View(progress);
+            return View(request);
         }
 
         // GET: Progress/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var progress = await _context.Progress.FindAsync(id);
+            var progress = await _progressService.GetById(id);
             if (progress == null)
             {
                 return NotFound();
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Task_Id", "Task_Name", progress.TaskId);
             return View(progress);
         }
 
@@ -95,7 +86,7 @@ namespace TasksManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Progress_Id,Progress_Percentage,Note,TaskId")] Progress progress)
+        public async Task<IActionResult> Edit(int id, ProgressViewModel progress)
         {
             if (id != progress.Progress_Id)
             {
@@ -104,39 +95,16 @@ namespace TasksManager.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(progress);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProgressExists(progress.Progress_Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _progressService.Update(progress);
+                return RedirectToAction(nameof(Index));           
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Task_Id", "Task_Name", progress.TaskId);
             return View(progress);
         }
 
         // GET: Progress/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var progress = await _context.Progress
-                .Include(p => p.Task)
-                .FirstOrDefaultAsync(m => m.Progress_Id == id);
+            var progress = await _progressService.GetById(id);
             if (progress == null)
             {
                 return NotFound();
@@ -150,19 +118,9 @@ namespace TasksManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var progress = await _context.Progress.FindAsync(id);
-            if (progress != null)
-            {
-                _context.Progress.Remove(progress);
-            }
-
-            await _context.SaveChangesAsync();
+            await _progressService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProgressExists(int id)
-        {
-            return _context.Progress.Any(e => e.Progress_Id == id);
-        }
     }
 }

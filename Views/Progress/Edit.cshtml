@@ -1,4 +1,4 @@
-@model TasksManager.Data.Entities.Progress
+@model TasksManager.ViewModels.ProgressViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -18,16 +18,19 @@
                 <input asp-for="Progress_Percentage" class="form-control" />
                 <span asp-validation-for="Progress_Percentage" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="Note" class="control-label"></label>
                 <input asp-for="Note" class="form-control" />
                 <span asp-validation-for="Note" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="TaskId" class="control-label"></label>
                 <select asp-for="TaskId" class="form-control" asp-items="ViewBag.TaskId"></select>
                 <span asp-validation-for="TaskId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -40,5 +43,15 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 }
