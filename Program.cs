@@ -16,7 +16,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 //DI configuration
 builder.Services.AddTransient<ITasksService, TasksService>();
 builder.Services.AddTransient<IAttachmentService, AttachmentService>();
-//builder.Services.AddTransient<ILessonsService, LessonsService>();
+builder.Services.AddTransient<IDocumentService, DocumentService>();
 //builder.Services.AddTransient<ILessonsService, LessonsService>();
 
 //File Storage

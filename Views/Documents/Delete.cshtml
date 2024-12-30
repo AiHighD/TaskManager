@@ -1,4 +1,4 @@
-@model TasksManager.Data.Entities.Documents
+@model TasksManager.ViewModels.DocumentViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -26,9 +26,6 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Task)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task.Task_Id)
-        </dd>
     </dl>
     
     <form asp-action="Delete">

@@ -7,7 +7,6 @@ namespace TasksManager.Services
 
     {
         
-
         Task<PaginatedList<AttachmentViewModel>> GetAllFilter(string sortOrder, string currentFilter, string searchString,int? taskId ,int? pageNumber, int pageSize);
 
         Task<AttachmentViewModel> GetById(int id);

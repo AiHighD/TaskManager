@@ -1,4 +1,4 @@
-@model IEnumerable<TasksManager.Data.Entities.Documents>
+@model PaginatedList<DocumentViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,19 +9,36 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index">
+    <div class="d-flex">
+        <input class="form-control" placeholder="Search..." value="@ViewData["CurrentFilter"]" type="text"
+            autocomplete="off" name="SearchString" />
+        <select name="taskId" class="form-select" asp-items="ViewBag.TaskId">
+            <option value="">-- Select Task --</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Doc)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DocSortParm"]"
+                     asp-route-currentFilter="@ViewData["CurrentFilter"]">                  
+                @Html.DisplayNameFor(model => model[0].Doc)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Time_Create_Doc)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]"
+                     asp-route-currentFilter="@ViewData["CurrentFilter"]">                   
+                @Html.DisplayNameFor(model => model[0].Time_Create_Doc)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Task)
+                Actions
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -34,9 +51,6 @@
                 @Html.DisplayFor(modelItem => item.Time_Create_Doc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Task.Task_Id)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.Documents_Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Documents_Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Documents_Id">Delete</a>
@@ -45,3 +59,17 @@
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
+    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
+    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @nextDisabled">
+    Next
+</a>

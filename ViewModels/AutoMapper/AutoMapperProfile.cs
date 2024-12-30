@@ -1,5 +1,6 @@
 using AutoMapper;
 using TasksManager.Data.Entities;
+using TasksManager.ViewModels;
 
 namespace TasksManager.ViewModels.AutoMapper
 {
@@ -16,22 +17,30 @@ namespace TasksManager.ViewModels.AutoMapper
             // Proress
             CreateMap<Progress, ProgressViewModel>();
             CreateMap<ProgressViewModel, Progress>();
-            CreateMap<ProgressRequest, Progress>();
+            CreateMap<ProgressRequest, Progress>()
+            .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
 
             // Document
-            CreateMap<Documents, DocumentViewModel>();
-            CreateMap<DocumentViewModel, Documents>();
-            CreateMap<DocumentRequest, Documents>();
+            CreateMap<Documents, DocumentViewModel>()
+                .ForMember(dest => dest.Task, opt => opt.MapFrom(src => src.TaskId)); // Task ánh xạ từ TaskId
+
+            CreateMap<DocumentViewModel, Documents>()
+                .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId)); // TaskId ánh xạ từ Task
+
+            CreateMap<DocumentRequest, Documents>()
+                .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
+
 
             // Attachment
             CreateMap<Attachments, AttachmentViewModel>()
-           .ForMember(dest => dest.Task, opt => opt.MapFrom(src => src.TaskId));
+                .ForMember(dest => dest.Task, opt => opt.MapFrom(src => src.TaskId));
 
             CreateMap<AttachmentViewModel, Attachments>()
                 .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
 
             CreateMap<AttachmentRequest, Attachments>()
                 .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
+            
         }       
     }
 }

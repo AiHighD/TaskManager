@@ -1,4 +1,4 @@
-@model TasksManager.Data.Entities.Documents
+@model TasksManager.ViewModels.DocumentViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -40,5 +40,15 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 }

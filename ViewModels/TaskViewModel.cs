@@ -27,7 +27,6 @@ public class TaskRequest
     [Required]
     public DateTime EndTime { get; set; }
 
-    [StringLength(60, MinimumLength = 3)]
     [Required]
     public string? Status { get; set; }
 }
