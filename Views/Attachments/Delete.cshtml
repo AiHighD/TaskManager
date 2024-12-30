@@ -11,23 +11,42 @@
     <h4>Attachments</h4>
     <hr />
     <dl class="row" enctype="multipart/form-data">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+        
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.File)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.File)
+        <dd class="text-center col-sm-10">
+            <div id="current-file">
+                @if (!string.IsNullOrEmpty(Model.File))
+                {
+                    <div class="file-info">
+                        <img src="@Url.Content($"/assets/images/icons/{System.IO.Path.GetExtension(Model.File).Trim('.').ToLower()}-icon.png")"
+                            alt="File Icon" style="width: 50px; height: 50px;" />
+                        <a href="@Model.File" target="_blank">@System.IO.Path.GetFileName(Model.File)</a>
+                    </div>
+                }
+            </div>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Image)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
+        <dd class="text-center col-sm-10">
+            <div class="image-preview my-2">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img id="preview" width="50%" class="img-fluid" src="@Model.Image" alt="Preview" />
+                }
+                else
+                {
+                    <img id="preview" width="50%" class="img-fluid d-none" src="" alt="Preview" />
+                }
+            </div>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Time_Create_Tep)
@@ -48,4 +67,5 @@
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
+    
 </div>

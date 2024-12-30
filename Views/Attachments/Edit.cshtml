@@ -29,14 +29,12 @@
                 <span asp-validation-for="FileUpload" class="text-danger"></span>
             </div>
 
-            <!-- Current File -->
             <div id="current-file" class="my-2">
                 @if (!string.IsNullOrEmpty(Model.File))
                 {
                     <div class="file-info">
                         <img src="@Url.Content($"/assets/images/icons/{System.IO.Path.GetExtension(Model.File).Trim('.').ToLower()}-icon.png")"
-                            alt="File Icon" style="width: 24px; height: 24px;" />
-
+                            alt="File Icon" style="width: 50px; height: 50px;" />
                         <a href="@Model.File" target="_blank">@System.IO.Path.GetFileName(Model.File)</a>
                     </div>
                 }
@@ -60,11 +58,11 @@
             <div class="image-preview my-2">
                 @if (!string.IsNullOrEmpty(Model.Image))
                 {
-                    <img id="preview" width="50%" class="img-fluid" src="@Model.Image" alt="Preview" />
+                    <img id="preview" width="80%" class="img-fluid" src="@Model.Image" alt="Preview" />
                 }
                 else
                 {
-                    <img id="preview" width="50%" class="img-fluid d-none" src="" alt="Preview" />
+                    <img id="preview" width="80%" class="img-fluid d-none" src="" alt="Preview" />
                 }
             </div>
 
@@ -77,11 +75,13 @@
                 <input asp-for="Time_Create_Tep" class="form-control" />
                 <span asp-validation-for="Time_Create_Tep" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="TaskId" class="control-label"></label>
                 <select asp-for="TaskId" class="form-control" asp-items="ViewBag.TaskId"></select>
                 <span asp-validation-for="TaskId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -109,6 +109,7 @@
             });
     </script>
     <script>
+        // Hàm trả về đường dẫn icon theo loại file
         function getFileIcon(fileName) {
             const extension = fileName.split('.').pop().toLowerCase();
             const iconMap = {
@@ -123,10 +124,10 @@
                 'png': '/assets/images/icons/image-icon.png',
                 'gif': '/assets/images/icons/image-icon.png'
             };
-            return iconMap[extension] || '/assets/icons/default-icon.png';
+            return iconMap[extension] || '/assets/images/icons/default-icon.png';
         }
 
-        // Preview file on file input change
+        // Preview file khi upload
         document.getElementById('file-input').addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
@@ -134,31 +135,85 @@
                 const fileSize = (file.size / 1024).toFixed(2) + ' KB';
                 const iconSrc = getFileIcon(fileName);
 
-                // Hide current file
-                document.getElementById('current-file').classList.add('d-none');
+                // Ẩn file hiện tại
+                const currentFile = document.getElementById('current-file');
+                if (currentFile) currentFile.classList.add('d-none');
 
-                if (file.type.startsWith('image/')) {
-                    // If the file is an image
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        document.getElementById('new-image-preview').src = e.target.result;
-                        document.getElementById('new-image-preview').classList.remove('d-none');
-                        document.getElementById('file-preview').classList.add('d-none');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    // If the file is not an image
-                    document.getElementById('new-image-preview').classList.add('d-none');
-                    document.getElementById('file-preview').classList.remove('d-none');
-                    document.getElementById('file-icon').innerHTML = `<img src="${iconSrc}" alt="File Icon" style="width: 80px;">`;
-                    document.getElementById('file-name').textContent = fileName;
-                    document.getElementById('file-info').textContent = `Size: ${fileSize}`;
-                }
+                // Hiển thị icon mới
+                const filePreview = document.getElementById('file-preview');
+                filePreview.classList.remove('d-none');
+                document.getElementById('file-icon').innerHTML = `<img src="${iconSrc}" alt="File Icon" style="width: 80px;">`;
+                document.getElementById('file-name').textContent = fileName;
+                document.getElementById('file-info').textContent = `Size: ${fileSize}`;
             }
         });
+
+        // Preview hình ảnh khi upload
+        document.getElementById('image-input').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('preview');
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         document.getElementById('new-image-preview').classList.add('d-none');
         // Preview image on image input change
         document.getElementById('image-input').addEventListener('change', previewImage);
+
+</script>
+
+<script>
+        $(document).ready(function () {
+            const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.docx', '.txt', '.xlsx', '.pptx', '.zip', '.PDF'];
+
+            function checkFileType(file, inputId) {
+                const fileName = file.name;
+                const fileExtension = '.' + fileName.split('.').pop().toLowerCase();
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                    alert('File type not supported. Allowed types: ' + allowedExtensions.join(', '));
+                    $(`#${inputId}`).val('');
+                    return false;
+                }
+                return true;
+            }
+
+            $('#image-input').change(function () {
+                var input = this;
+
+                if (input.files && input.files[0]) {
+                    if (!checkFileType(input.files[0], 'image-input')) {
+                        $('#preview').addClass('d-none');
+                        return;
+                    }
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#preview').attr('src', e.target.result).removeClass('d-none');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $('#preview').addClass('d-none');
+                }
+            });
+
+            $('#file-input').change(function () {
+                var input = this;
+                if (input.files && input.files[0]) {
+                    if (!checkFileType(input.files[0], 'file-input')) {
+                        $('#file-preview').addClass('d-none');
+                        return;
+                    }
+                    // Existing file preview logic...
+                }
+            });
+        });
 </script>
 
 }

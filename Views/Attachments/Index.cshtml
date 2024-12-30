@@ -43,7 +43,9 @@
                 @Html.DisplayNameFor(model => model[0].Time_Create_Tep)
                 </a>
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -55,23 +57,23 @@
                         <a href="@item.File" download>
                         @if (item.File.EndsWith(".pdf"))
                         {
-                                    <img src="../assets/images/icons/pdf-icon.png" width="50" />
+                                    <img src="../assets/images/icons/pdf-icon.png" width="80" />
                         }
                         else if (item.File.EndsWith(".doc") || item.File.EndsWith(".docx"))
                         {
-                                    <img src="../assets/images/icons/docx-icon.png" width="50" />
+                                    <img src="../assets/images/icons/docx-icon.png" width="80" />
                         }
                         else if (item.File.EndsWith(".xls") || item.File.EndsWith(".xlsx"))
                         {
-                                    <img src="../assets/images/icons/xlsx-icon.png" width="50" />
+                                    <img src="../assets/images/icons/xlsx-icon.png" width="80" />
                         }
                         else if (item.File.EndsWith(".txt") || item.File.EndsWith("."))
                         {
-                                    <img src="../assets/images/icons/txt-icon.png" width="50" />
+                                    <img src="../assets/images/icons/txt-icon.png" width="80" />
                         }
                         else
                         {
-                                    <img src="../assets/images/icons/default-icon.png" width="50" />
+                                    <img src="../assets/images/icons/default-icon.png" width="80" />
                         }
                         </a>
                 }
@@ -79,7 +81,9 @@
             <td>
                 @if (!string.IsNullOrEmpty(item.Image))
                 {
-                        <img src="@item.Image" width="100" />
+                    <a href="@item.Image" download>
+                    <img src="@item.Image" width="150" />
+                    </a>
                 }
             </td>
             <td>
