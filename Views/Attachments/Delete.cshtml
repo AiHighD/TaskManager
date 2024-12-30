@@ -1,0 +1,51 @@
+@model TasksManager.ViewModels.AttachmentViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Attachments</h4>
+    <hr />
+    <dl class="row" enctype="multipart/form-data">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.File)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.File)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Image)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Time_Create_Tep)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Time_Create_Tep)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Attachments_Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

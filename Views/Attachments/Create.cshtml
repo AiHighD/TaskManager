@@ -1,0 +1,125 @@
+@model TasksManager.ViewModels.AttachmentRequest
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Attachments</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FileUpload" class="control-label"></label>
+                <input asp-for="FileUpload" type="file" class="form-control" id="file-input" accept="file/*"
+                    onchange="previewFile(event)" />
+                <span asp-validation-for="FileUpload" class="text-danger"></span>
+            </div>
+
+            <!-- Preview for other file types -->
+            <div id="file-preview" class="my-2 d-none">
+                <p id="file-name"></p>
+                <div id="file-icon" class="d-none"></div> <!-- Div to show icon -->
+                <div id="file-info"></div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageUpload" class="control-label"></label>
+                <input asp-for="ImageUpload" type="file" class="form-control" id="image-input"
+                    onchange="previewImage(event)"    accept="image/*" />
+                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+            </div>
+
+            <div class="image-preview my-2">
+                <img id="preview" width="80%" class="img-fluid d-none" src="#" alt="Preview" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Time_Create_Tep" class="control-label"></label>
+                <input asp-for="Time_Create_Tep" class="form-control" />
+                <span asp-validation-for="Time_Create_Tep" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TaskId" class="control-label"></label>
+                <select asp-for="TaskId" class ="form-control" asp-items="ViewBag.TaskId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <script>
+        $(document).ready(function () {
+            const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.docx', '.txt', '.xlsx', '.pptx', '.zip', '.PDF'];
+
+            function checkFileType(file, inputId) {
+                const fileName = file.name;
+                const fileExtension = '.' + fileName.split('.').pop().toLowerCase();
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                    alert('File type not supported. Allowed types: ' + allowedExtensions.join(', '));
+                    $(`#${inputId}`).val('');
+                    return false;
+                }
+                return true;
+            }
+
+            $('#image-input').change(function () {
+                var input = this;
+
+                if (input.files && input.files[0]) {
+                    if (!checkFileType(input.files[0], 'image-input')) {
+                        $('#preview').addClass('d-none');
+                        return;
+                    }
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#preview').attr('src', e.target.result).removeClass('d-none');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $('#preview').addClass('d-none');
+                }
+            });
+
+            $('#file-input').change(function () {
+                var input = this;
+                if (input.files && input.files[0]) {
+                    if (!checkFileType(input.files[0], 'file-input')) {
+                        $('#file-preview').addClass('d-none');
+                        return;
+                    }
+                    // Existing file preview logic...
+                }
+            });
+        });
+    </script>
+}

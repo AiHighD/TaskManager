@@ -1,0 +1,164 @@
+@model TasksManager.ViewModels.AttachmentViewModel
+@using System.IO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Attachments</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Attachments_Id" />
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <input type="hidden" asp-for="Image" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FileUpload" class="control-label"></label>
+                <input asp-for="FileUpload" type="file" class="form-control" id="file-input" accept="file/*"
+                    onchange="previewFile(event)" />
+                <span asp-validation-for="FileUpload" class="text-danger"></span>
+            </div>
+
+            <!-- Current File -->
+            <div id="current-file" class="my-2">
+                @if (!string.IsNullOrEmpty(Model.File))
+                {
+                    <div class="file-info">
+                        <img src="@Url.Content($"/assets/images/icons/{System.IO.Path.GetExtension(Model.File).Trim('.').ToLower()}-icon.png")"
+                            alt="File Icon" style="width: 24px; height: 24px;" />
+
+                        <a href="@Model.File" target="_blank">@System.IO.Path.GetFileName(Model.File)</a>
+                    </div>
+                }
+            </div>
+
+            <!-- Preview for other file types -->
+            <div id="file-preview" class="my-2 d-none">
+                <p id="file-name"></p>
+                <div id="file-icon" class="d-none"></div> <!-- Div to show icon -->
+                <div id="file-info"></div>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="ImageUpload" class="control-label"></label>
+                <input asp-for="ImageUpload" type="file" class="form-control" id="image-input"
+                    onchange="previewImage(event)"           accept="image/*" />
+                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+            </div>
+
+            <div class="image-preview my-2">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img id="preview" width="50%" class="img-fluid" src="@Model.Image" alt="Preview" />
+                }
+                else
+                {
+                    <img id="preview" width="50%" class="img-fluid d-none" src="" alt="Preview" />
+                }
+            </div>
+
+            <div class="image-preview my-2">
+                <img id="preview" width="80%" class="img-fluid d-none" src="#" alt="Preview" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Time_Create_Tep" class="control-label"></label>
+                <input asp-for="Time_Create_Tep" class="form-control" />
+                <span asp-validation-for="Time_Create_Tep" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TaskId" class="control-label"></label>
+                <select asp-for="TaskId" class="form-control" asp-items="ViewBag.TaskId"></select>
+                <span asp-validation-for="TaskId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <!-- Thêm Font Awesome để hiển thị icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <script>
+        function getFileIcon(fileName) {
+            const extension = fileName.split('.').pop().toLowerCase();
+            const iconMap = {
+                'pdf': '/assets/images/icons/pdf-icon.png',
+                'doc': '/assets/images/icons/docx-icon.png',
+                'docx': '/assets/images/icons/docx-icon.png',
+                'xls': '/assets/images/icons/xlsx-icon.png',
+                'xlsx': '/assets/images/icons/xlsx-icon.png',
+                'txt': '/assets/images/icons/txt-icon.png',
+                'jpg': '/assets/images/icons/image-icon.png',
+                'jpeg': '/assets/images/icons/image-icon.png',
+                'png': '/assets/images/icons/image-icon.png',
+                'gif': '/assets/images/icons/image-icon.png'
+            };
+            return iconMap[extension] || '/assets/icons/default-icon.png';
+        }
+
+        // Preview file on file input change
+        document.getElementById('file-input').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileName = file.name;
+                const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+                const iconSrc = getFileIcon(fileName);
+
+                // Hide current file
+                document.getElementById('current-file').classList.add('d-none');
+
+                if (file.type.startsWith('image/')) {
+                    // If the file is an image
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById('new-image-preview').src = e.target.result;
+                        document.getElementById('new-image-preview').classList.remove('d-none');
+                        document.getElementById('file-preview').classList.add('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // If the file is not an image
+                    document.getElementById('new-image-preview').classList.add('d-none');
+                    document.getElementById('file-preview').classList.remove('d-none');
+                    document.getElementById('file-icon').innerHTML = `<img src="${iconSrc}" alt="File Icon" style="width: 80px;">`;
+                    document.getElementById('file-name').textContent = fileName;
+                    document.getElementById('file-info').textContent = `Size: ${fileSize}`;
+                }
+            }
+        });
+        document.getElementById('new-image-preview').classList.add('d-none');
+        // Preview image on image input change
+        document.getElementById('image-input').addEventListener('change', previewImage);
+</script>
+
+}

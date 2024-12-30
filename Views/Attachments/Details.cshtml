@@ -1,0 +1,49 @@
+@model TasksManager.ViewModels.AttachmentViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Attachments</h4>
+    <hr />
+    <dl class="row" enctype="multipart/form-data">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.File)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.File)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Image)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Time_Create_Tep)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Time_Create_Tep)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Attachments_Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
