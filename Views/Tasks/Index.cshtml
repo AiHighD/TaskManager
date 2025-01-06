@@ -4,10 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>TASK</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Create New
+    </a>
 </p>
 
 <form asp-action="Index">
@@ -22,37 +24,37 @@
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
-                @Html.DisplayNameFor(model => model[0].Task_Name)
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
+                Task Name
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TopicSortParm"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
                 @Html.DisplayNameFor(model => model[0].Topic)
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["DescriptionSortParm"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
                 @Html.DisplayNameFor(model => model[0].Description)
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["StartDateSortParm"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
                 @Html.DisplayNameFor(model => model[0].StartTime)
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["EndDateSortParm"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
                 @Html.DisplayNameFor(model => model[0].EndTime)
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
                 @Html.DisplayNameFor(model => model[0].Status)
                 </a>
             </th>
@@ -82,11 +84,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Task_Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Task_Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Task_Id">Delete</a>
-            </td>
+                <td class="text-nowrap">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@item.Task_Id" class="btn btn-success btn-sm">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Task_Id" class="btn btn-info btn-sm">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Task_Id" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </td>
         </tr>
         }
     </tbody>
@@ -97,11 +101,16 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
-    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @prevDisabled">
-    Previous
-</a>
-<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
-    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @nextDisabled">
-    Next
-</a>
+<!-- Pagination Buttons -->
+<div class="d-flex justify-content-between mt-4">
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
+        asp-route-currentFilter="@ViewData["CurrentFilter"]"
+        class="btn btn-outline-secondary @(!Model.HasPreviousPage ? "disabled" : "")">
+        Previous
+    </a>
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
+        asp-route-currentFilter="@ViewData["CurrentFilter"]"
+        class="btn btn-outline-secondary @(!Model.HasNextPage ? "disabled" : "")">
+        Next
+    </a>
+</div>

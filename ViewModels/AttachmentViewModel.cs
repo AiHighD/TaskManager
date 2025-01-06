@@ -8,8 +8,10 @@ public class AttachmentRequest
     [Required]
     public string? Description { get; set; }
 
+    [Required]
     public IFormFile? FileUpload { get; set; }
 
+    [Required]
     public IFormFile? ImageUpload { get; set; }
 
     [DataType(DataType.Date)]

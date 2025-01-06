@@ -4,20 +4,34 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>PROGRESS</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Create New
+    </a>
 </p>
 
-<form asp-action="Index">
-    <div class="d-flex">
-        <input class="form-control" placeholder="Search..." value="@ViewData["CurrentFilter"]" type="text"
-            autocomplete="off" name="SearchString" />
-        <select name="taskId" class="form-select" asp-items="ViewBag.TaskId">
-            <option value="">-- Select Task --</option>
-        </select>
-        <button type="submit" class="btn btn-primary">Filter</button>
+<form asp-action="Index" class="mb-4">
+    <div class="card shadow p-4">
+        <div class="row g-3 align-items-center">
+            <!-- Search Box -->
+            <div class="col-md-6">
+                <input id="searchBox" class="form-control" placeholder="Search..." value="@ViewData["CurrentFilter"]"
+                    type="text" autocomplete="off" name="SearchString" />
+            </div>
+            <!-- Task Filter Dropdown -->
+            <div class="col-md-4">
+                <select id="taskFilter" name="taskId" class="form-select" asp-items="ViewBag.TaskId">
+                    <option value="">-- Select Task --</option>
+                </select>
+            </div>
+            <!-- Submit Button -->
+            <div class="col-md-2 d-grid">
+                <label class="form-label d-none">Filter</label>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
     </div>
 </form>
 
@@ -25,10 +39,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model[0].Progress_Percentage)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ProgressSortParm"]"
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
+                    Progress Percentage
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Note)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NoteSortParm"]"
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
+                    @Html.DisplayNameFor(model => model[0].Note)
+                </a>
             </th>
 
             <th>
@@ -45,13 +65,33 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Note)
             </td>
-
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Progress_Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Progress_Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Progress_Id">Delete</a>
-            </td>
+                <td class="text-nowrap">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@item.Progress_Id" class="btn btn-success btn-sm">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Progress_Id" class="btn btn-info btn-sm">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Progress_Id" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </td>
         </tr>
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<!-- Pagination Buttons -->
+<div class="d-flex justify-content-between mt-4">
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
+        asp-route-currentFilter="@ViewData["CurrentFilter"]"
+        class="btn btn-outline-secondary @(!Model.HasPreviousPage ? "disabled" : "")">
+        Previous
+    </a>
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
+        asp-route-currentFilter="@ViewData["CurrentFilter"]"
+        class="btn btn-outline-secondary @(!Model.HasNextPage ? "disabled" : "")">
+        Next
+    </a>
+</div>
