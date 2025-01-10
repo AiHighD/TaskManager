@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using TasksManager.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +15,7 @@ using TasksManager.ViewModels;
 
 namespace TasksManager.Controllers
 {
-    // [Authorize]
+    [TypeFilter(typeof(AuthenticationFilter))]
     public class DocumentsController : Controller
     {
 

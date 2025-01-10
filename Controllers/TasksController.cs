@@ -7,10 +7,11 @@ using TasksManager.Data.Entities;
 using TasksManager.ViewModels;
 using TasksManager.Services;
 using Microsoft.AspNetCore.Authorization;
+using TasksManager.Filters;
 
 namespace TasksManager.Controllers
 {
-    // [Authorize]
+    [TypeFilter(typeof(AuthenticationFilter))]
     public class TasksController : Controller
     {
         private readonly ITasksService _tasksService;

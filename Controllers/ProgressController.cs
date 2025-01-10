@@ -1,3 +1,4 @@
+using TasksManager.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,7 +7,7 @@ using TasksManager.ViewModels;
 
 namespace TasksManager.Controllers
 {
-    // [Authorize]
+    [TypeFilter(typeof(AuthenticationFilter))]
     public class ProgressController : Controller
     {
         private readonly IProgressService _progressService;

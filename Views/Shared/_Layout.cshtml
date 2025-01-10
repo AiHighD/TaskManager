@@ -79,25 +79,46 @@
               <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"></iconify-icon>
               <span class="hide-menu">AUTH</span>
             </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/?" aria-expanded="false">
-                <iconify-icon icon="solar:login-3-line-duotone"></iconify-icon>
-                <span class="hide-menu">Login</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/?" aria-expanded="false">
-                <iconify-icon icon="solar:user-plus-rounded-line-duotone"></iconify-icon>
-                <span class="hide-menu">Register</span>
-              </a>
-            </li>
+
+            <ul class="sidebar">
+              @if (Context.Session.GetString("JWTToken") != null)
+              {
+                <!-- Khi người dùng đã đăng nhập -->
+                <li class="sidebar-item">
+                  <form class="sidebar-link" asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-link text-dark d-flex align-items-center">
+                      <iconify-icon icon="solar:logout-line-duotone"></iconify-icon>
+                      <span class="hide-menu">Logout</span>
+                    </button>
+                  </form>
+                </li>
+              }
+              else
+              {
+                <!-- Khi người dùng chưa đăng nhập -->
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="/Account/Login" aria-expanded="false">
+                    <iconify-icon icon="solar:login-3-line-duotone"></iconify-icon>
+                    <span class="hide-menu">Login</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="/Account/Register" aria-expanded="false">
+                    <iconify-icon icon="solar:user-plus-rounded-line-duotone"></iconify-icon>
+                    <span class="hide-menu">Register</span>
+                  </a>
+                </li>
+              }
+
+            </ul>
+
+
             <li>
               <span class="sidebar-divider lg"></span>
             </li>
             <h2><a class="btn btn-primary" href="/swagger">Explore APIs</a></h2>
-          <div
->
-          </div>
+            <div>
+            </div>
         </nav>
         <!-- End Sidebar navigation -->
       </div>
@@ -126,21 +147,21 @@
             <div class="col-lg-12 d-flex align-items-strech">
               <div class="card w-100">
                 <div class="card-body">
-                    @RenderBody()
+                  @RenderBody()
                 </div>
               </div>
             </div>
           </div>
         </div>
-    </div>
       </div>
-</div>
-  
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </div>
+  </div>
 
-    @await RenderSectionAsync("Scripts", required: false)
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="~/js/site.js" asp-append-version="true"></script>
+
+  @await RenderSectionAsync("Scripts", required: false)
   <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/assets/js/sidebarmenu.js"></script>

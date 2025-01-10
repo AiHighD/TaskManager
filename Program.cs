@@ -46,7 +46,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 // Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Course Management", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Task Management", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -83,12 +83,14 @@ var jwtOptions = builder.Configuration
     .Get<JwtOptions>();
 
 builder.Services.AddSingleton(jwtOptions!);
+
 //Configuring the Authentication Service
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+
 .AddJwtBearer(opts =>
 {
     //convert the string signing key to byte array
@@ -107,6 +109,21 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+
+// Add session support
+// Add memory cache
+builder.Services.AddDistributedMemoryCache();
+
+// Add session support 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+//
+
+
 var app = builder.Build();
 
 
@@ -118,21 +135,22 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//
+app.UseSession();  // Phải đặt trước UseRouting
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+//
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication();
-
-app.UseRouting();
-
-app.UseAuthorization();
 
 app.UseSwagger();
 
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Course Management V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Task Management V1");
 });
 
 app.MapControllerRoute(
