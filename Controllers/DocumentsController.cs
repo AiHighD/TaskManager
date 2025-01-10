@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using TasksManager.ViewModels;
 
 namespace TasksManager.Controllers
 {
+    // [Authorize]
     public class DocumentsController : Controller
     {
 
@@ -83,7 +85,7 @@ namespace TasksManager.Controllers
         // GET: Documents/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            
+
             var documents = await _documentService.GetById(id);
             if (documents == null)
             {
@@ -109,14 +111,14 @@ namespace TasksManager.Controllers
             {
                 await _documentService.Update(documents);
                 return RedirectToAction(nameof(Index));
-            }          
+            }
             return View(documents);
         }
 
         // GET: Documents/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-           var documents = await _documentService.GetById(id);
+            var documents = await _documentService.GetById(id);
             if (documents == null)
             {
                 return NotFound();

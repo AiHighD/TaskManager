@@ -6,9 +6,11 @@ using TasksManager.Data;
 using TasksManager.Data.Entities;
 using TasksManager.ViewModels;
 using TasksManager.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TasksManager.Controllers
 {
+    // [Authorize]
     public class TasksController : Controller
     {
         private readonly ITasksService _tasksService;
@@ -29,7 +31,7 @@ namespace TasksManager.Controllers
             ViewData["StatusSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("status") ? "status_desc" : "status";
             ViewData["StartDateSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("start_time") ? "start_time_desc" : "";
             ViewData["EndDateSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("end_time") ? "end_time_desc" : "";
-            
+
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
             return View(await _tasksService.GetAllFilter(sortOrder, currentFilter, searchString, pageNumber, PAGESIZE));
@@ -70,7 +72,7 @@ namespace TasksManager.Controllers
         // GET: Tasks/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-           var tasks = await _tasksService.GetById(id);
+            var tasks = await _tasksService.GetById(id);
             if (tasks == null)
             {
                 return NotFound();
@@ -92,7 +94,7 @@ namespace TasksManager.Controllers
 
             if (ModelState.IsValid)
             {
-               await _tasksService.Update(tasks);
+                await _tasksService.Update(tasks);
                 return RedirectToAction(nameof(Index));
             }
             return View(tasks);
@@ -101,7 +103,7 @@ namespace TasksManager.Controllers
         // GET: Tasks/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-           var tasks = await _tasksService.GetById(id);
+            var tasks = await _tasksService.GetById(id);
             if (tasks == null)
             {
                 return NotFound();

@@ -6,7 +6,7 @@ namespace TasksManager.ViewModels.AutoMapper
 {
     public class AutoMapperProfile : Profile
     {
-        
+
         public AutoMapperProfile()
         {
             // Task
@@ -17,7 +17,7 @@ namespace TasksManager.ViewModels.AutoMapper
             // Proress
             CreateMap<Progress, ProgressViewModel>()
                 .ForMember(dest => dest.Task, opt => opt.MapFrom(src => src.TaskId)); // Task ánh xạ từ TaskId
-                
+
             CreateMap<ProgressViewModel, Progress>()
                 .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId)); // TaskId ánh xạ từ Task
 
@@ -44,7 +44,11 @@ namespace TasksManager.ViewModels.AutoMapper
 
             CreateMap<AttachmentRequest, Attachments>()
                 .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId));
-            
-        }       
+
+            //user
+            CreateMap<User, UserViewModel>();
+            CreateMap<RegisterRequest, User>()
+            .ForMember(des => des.UserName, opt => opt.MapFrom(src => src.Email));
+        }
     }
 }

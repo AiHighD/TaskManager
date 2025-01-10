@@ -4,73 +4,88 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 class="text-center text">Task Details</h1>
+<hr />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <dl class="row" enctype="multipart/form-data">
+                        <!-- Name -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">File</label>
+                        </div>
 
-<div>
-    <h4>Attachments</h4>
-    <hr />
-    <dl class="row" enctype="multipart/form-data">
+                        <dd class="text-center form bg-white">
+                            <div id="current-file">
+                                @if (!string.IsNullOrEmpty(Model.File))
+                                {
+                                    <div class="file-info">
+                                        <img src="@Url.Content($"/assets/images/icons/{System.IO.Path.GetExtension(Model.File).Trim('.').ToLower()}-icon.png")"
+                                            alt="File Icon" style="width: 50px; height: 50px;" />
+                                        <a href="@Model.File" target="_blank">@System.IO.Path.GetFileName(Model.File)</a>
+                                    </div>
+                                }
+                            </div>
+                        </dd>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">Image</label>
+                        </div>
+
+                        <div class="text-center form bg-white">
+                            <div class="image-preview my-2">
+                                @if (!string.IsNullOrEmpty(Model.Image))
+                                {
+                                    <img id="preview" width="65%" class="img-fluid" src="@Model.Image" alt="Preview" />
+                                }
+                                else
+                                {
+                                    <img id="preview" width="65%" class="img-fluid d-none" src="" alt="Preview" />
+                                }
+                            </div>
+                        </div>
 
 
+                        <!-- Description -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.Description)</label>
+                            <div class="bg-white">
+                                <textarea asp-for="Description" class="form-control bg-white" rows="3"
+                                    disabled></textarea>
+                            </div>
+                        </div>
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.File)
-        </dt>
+                        <!-- StartTime -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">@Html.DisplayNameFor(model =>
+                                model.Time_Create_Tep)</label>
+                            <div class="form-control bg-white">
+                                @Html.DisplayFor(model => model.Time_Create_Tep)
+                            </div>
+                        </div>
 
-        <dd class = "text-center col-sm-10">
-        <div id="current-file">
-            @if (!string.IsNullOrEmpty(Model.File))
-            {
-                <div class="file-info">
-                    <img src="@Url.Content($"/assets/images/icons/{System.IO.Path.GetExtension(Model.File).Trim('.').ToLower()}-icon.png")"
-                        alt="File Icon" style="width: 50px; height: 50px;" />
-                    <a href="@Model.File" target="_blank">@System.IO.Path.GetFileName(Model.File)</a>
+                        <!-- StartTime -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.Task)</label>
+                            <div class="form-control bg-white">
+                                @Html.DisplayFor(model => model.Task)
+                            </div>
+                        </div>
+
+                    </dl>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-2">
+                        <a asp-action="Edit" asp-route-id="@Model?.Attachments_Id" class="btn btn-primary me-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
                 </div>
-            }
-        </div>
-        </dd>
-        
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd class = "text-center col-sm-10">
-            <div class="image-preview my-2">
-                @if (!string.IsNullOrEmpty(Model.Image))
-                {
-                    <img id="preview" width="50%" class="img-fluid" src="@Model.Image" alt="Preview" />
-                }
-                else
-                {
-                    <img id="preview" width="50%" class="img-fluid d-none" src="" alt="Preview" />
-                }
             </div>
-        </dd>
-
-
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Time_Create_Tep)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Time_Create_Tep)
-        </dd>
-
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task)
-        </dd>
-    </dl>
-</div>
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Attachments_Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
 </div>

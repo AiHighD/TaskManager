@@ -14,85 +14,126 @@
 
 <form asp-action="Index" class="mb-4">
     <div class="card shadow p-4">
-        <div class="row g-3 align-items-center">
+        <div class="row g-3 d-flex align-items-center">
             <!-- Search Box -->
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <input id="searchBox" class="form-control" placeholder="Search..." value="@ViewData["CurrentFilter"]"
                     type="text" autocomplete="off" name="SearchString" />
             </div>
+            <!-- Submit Button -->
+            <div class="col-md-1 d-grid">
+                <label class="form-label d-none">Search</label>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
             <!-- Task Filter Dropdown -->
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <select id="taskFilter" name="taskId" class="form-select" asp-items="ViewBag.TaskId">
                     <option value="">-- Select Task --</option>
                 </select>
             </div>
             <!-- Submit Button -->
-            <div class="col-md-2 d-grid">
+            <div class="col-md-1 d-grid">
                 <label class="form-label d-none">Filter</label>
                 <button type="submit" class="btn btn-primary">Filter</button>
             </div>
         </div>
     </div>
 </form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DocSortParm"]"
-                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
-                    Document
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]"
-                    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
-                    Time Create
-                </a>
-            </th>
-            <th>
-                Actions
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
+    <table class="table" style="table-layout: fixed; width: 100%;">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Doc)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Time_Create_Doc)
-                </td>
-                <td class="text-nowrap">
-                    <div class="d-flex gap-2">
-                        <a asp-action="Edit" asp-route-id="@item.Documents_Id" class="btn btn-success btn-sm">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Documents_Id" class="btn btn-info btn-sm">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Documents_Id" class="btn btn-danger btn-sm">Delete</a>
-                    </div>
-                </td>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DocSortParm"]"
+                        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
+                        Document
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]"
+                        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-light btn-sm">
+                        Time Create
+                    </a>
+                </th>
+                <th style="color: black;">
+                    @Html.DisplayNameFor(model => model[0].Task)
+                </th>
+                <th style="color: black;">
+                    Actions
+                </th>
             </tr>
-        }
-    </tbody>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="color: black;">
+                        @Html.DisplayFor(modelItem => item.Doc)
+                    </td>
+                    <td style="color: black;">
+                        @Html.DisplayFor(modelItem => item.Time_Create_Doc)
+                    </td>
+                    <td>
+                        <select id="taskFilter" name="taskId" class="form-select" asp-for="@item.TaskId"
+                            asp-items="ViewBag.TaskId" disabled>
+                        </select>
+                    </td>
+                    <td class="text-nowrap">
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Documents_Id" class="btn btn-success btn-sm">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Documents_Id" class="btn btn-info btn-sm">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Documents_Id" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-</table>
-
+    </table>
+</div>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
 <!-- Pagination Buttons -->
-<div class="d-flex justify-content-between mt-4">
-    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
-        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-        class="btn btn-outline-secondary @(!Model.HasPreviousPage ? "disabled" : "")">
-        Previous
-    </a>
-    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
-        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-        class="btn btn-outline-secondary @(!Model.HasNextPage ? "disabled" : "")">
-        Next
-    </a>
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div>
+        <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]"
+            class="btn btn-outline-secondary @(!Model.HasPreviousPage ? "disabled" : "")">
+            Previous
+        </a>
+    </div>
+
+    <!-- Display current page -->
+    <div class="text-center">
+        Page @Model.PageIndex of @Model.TotalPages
+    </div>
+
+    <div>
+        <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]"
+            class="btn btn-outline-secondary @(!Model.HasNextPage ? "disabled" : "")">
+            Next
+        </a>
+    </div>
 </div>
+
+<style>
+    /* Ẩn mũi tên trong thẻ <select> chỉ trên trang này */
+    #taskFilter {
+        -webkit-appearance: none;
+        /* Chrome, Safari */
+        -moz-appearance: none;
+        /* Firefox */
+        appearance: none;
+        /* Cho trình duyệt hỗ trợ */
+        background: transparent;
+        /* Ẩn nền */
+        border: 1px solid #ccc;
+        /* Viền cho select */
+        padding-right: 20px;
+        /* Khoảng cách phải nếu cần */
+    }
+</style>

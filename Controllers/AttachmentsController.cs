@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using TasksManager.ViewModels;
 
 namespace TasksManager.Controllers
 {
+    // [Authorize]
     public class AttachmentsController : Controller
     {
         private readonly ITasksService _tasksService;
@@ -27,7 +29,7 @@ namespace TasksManager.Controllers
         }
 
         // GET: Attanhments
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString,int? taskId, int? pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? taskId, int? pageNumber)
         {
             ViewData["DescriptionSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("description") ? "description_desc" : "description";
             ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("date_created") ? "date_created_desc" : "";
@@ -41,14 +43,14 @@ namespace TasksManager.Controllers
             });
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
-            return View(await _attachmentService.GetAllFilter(sortOrder, currentFilter, searchString , taskId, pageNumber, PAGESIZE));
+            return View(await _attachmentService.GetAllFilter(sortOrder, currentFilter, searchString, taskId, pageNumber, PAGESIZE));
         }
 
 
         // GET: Attanhments/Details/5
         public async Task<IActionResult> Details(int id)
         {
-        var attachments = await _attachmentService.GetById(id);
+            var attachments = await _attachmentService.GetById(id);
             if (attachments == null)
             {
                 return NotFound();
@@ -81,8 +83,8 @@ namespace TasksManager.Controllers
 
         // GET: Attanhments/Edit/5
         public async Task<IActionResult> Edit(int id)
-        { 
-            
+        {
+
             var attachments = await _attachmentService.GetById(id);
             if (attachments == null)
             {
@@ -108,7 +110,7 @@ namespace TasksManager.Controllers
             {
                 await _attachmentService.Update(attachments);
                 return RedirectToAction(nameof(Index));
-                }
+            }
             return View(attachments);
         }
 
@@ -132,6 +134,5 @@ namespace TasksManager.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-       
     }
 }

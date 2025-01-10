@@ -26,7 +26,7 @@ namespace TasksManager.Services
 
             var allowedExtensions = new[] {
             ".jpg", ".jpeg", ".png", ".gif", ".pdf",
-            ".docx", ".txt", ".xlsx", ".pptx", ".zip", ".PDF"
+            ".docx", ".txt", ".xlsx", ".pptx", ".zip", ".PDF" , ".doc", ".xls", ".ppt"
             };
 
             var fileExtension = Path.GetExtension(file.FileName).ToLower();

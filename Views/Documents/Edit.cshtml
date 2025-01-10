@@ -4,39 +4,42 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1 class="text-center text">Edit Document</h1>
 
-<h4>Documents</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Documents_Id" />
-            <div class="form-group">
-                <label asp-for="Doc" class="control-label"></label>
-                <input asp-for="Doc" class="form-control" />
-                <span asp-validation-for="Doc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Time_Create_Doc" class="control-label"></label>
-                <input asp-for="Time_Create_Doc" class="form-control" />
-                <span asp-validation-for="Time_Create_Doc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TaskId" class="control-label"></label>
-                <select asp-for="TaskId" class="form-control" asp-items="ViewBag.TaskId"></select>
-                <span asp-validation-for="TaskId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Documents_Id" />
+                        <div class="form-group">
+                            <label asp-for="Doc" class="form-label">Document</label>
+                            <input asp-for="Doc" class="form-control" />
+                            <span asp-validation-for="Doc" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Time_Create_Doc" class="form-label">Time Create</label>
+                            <input asp-for="Time_Create_Doc" class="form-control" />
+                            <span asp-validation-for="Time_Create_Doc" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TaskId" class="form-label">Task</label>
+                            <select asp-for="TaskId" class="form-control" asp-items="ViewBag.TaskId"></select>
+                            <span asp-validation-for="TaskId" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            <a asp-action="Index" class="btn btn-danger">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

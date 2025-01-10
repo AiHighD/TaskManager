@@ -18,6 +18,7 @@ public class AttachmentRequest
     [Required]
     public DateTime Time_Create_Tep { get; set; }
 
+    [Required]
     public int TaskId { get; set; }
 }
 

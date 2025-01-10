@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TasksManager.Services;
@@ -5,6 +6,7 @@ using TasksManager.ViewModels;
 
 namespace TasksManager.Controllers
 {
+    // [Authorize]
     public class ProgressController : Controller
     {
         private readonly IProgressService _progressService;
@@ -98,7 +100,7 @@ namespace TasksManager.Controllers
             if (ModelState.IsValid)
             {
                 await _progressService.Update(progress);
-                return RedirectToAction(nameof(Index));           
+                return RedirectToAction(nameof(Index));
             }
             return View(progress);
         }

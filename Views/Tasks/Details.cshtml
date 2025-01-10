@@ -4,51 +4,74 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 class="text-center text">Task Details</h1>
+<hr />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-lg">
+                <div class="card-body">
 
-<div>
-    <h4>Tasks</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task_Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task_Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Topic)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Topic)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+                    <!-- Name -->
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Task Name</label>
+                        <div class="form-control bg-white">
+                            @Html.DisplayFor(model => model.Task_Name)
+                        </div>
+                    </div>
+
+                    <!-- Topic -->
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.Topic)</label>
+                        <div class="form-control bg-white">
+                            @Html.DisplayFor(model => model.Topic)
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.Description)</label>
+                        <div class="bg-white">
+                            <textarea asp-for="Description" class="form-control bg-white" rows="3" disabled></textarea>
+                        </div>
+                    </div>
+
+                    <!-- StartTime -->
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.StartTime)</label>
+                        <div class="form-control bg-white">
+                            @Html.DisplayFor(model => model.StartTime)
+                        </div>
+                    </div>
+
+                    <!-- EndTime -->
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.EndTime)</label>
+                        <div class="form-control bg-white">
+                            @Html.DisplayFor(model => model.EndTime)
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">@Html.DisplayNameFor(model => model.Status)</label>
+                        <div class="form-control bg-white">
+                            @Html.DisplayFor(model => model.Status)
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model?.Task_Id" class="btn btn-primary me-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Task_Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>
